@@ -1,4 +1,5 @@
 const express = require("express");
+const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 app.use(express.json());
@@ -31,10 +32,10 @@ app.post("/clientes", (req, res) => {
     return c.id;
   });
 
-  const maxId = clientes.length > 0 ? Math.max(...ids) : 0;
+  const uuid = uuidv4();
 
   const novoCliente = {
-    id: maxId + 1,
+    id: uuid,
     nome,
     email,
   };
@@ -50,7 +51,7 @@ app.put("/clientes/:id", (req, res) => {
 
   const { nome, email } = req.body;
 
-  const indice = clientes.findIndex((c) => c.id === +id);
+  const indice = clientes.findIndex((c) => c.id == id);
 
   if (indice >= 0) {
     const clienteCadastrado = clientes[indice];
@@ -69,9 +70,10 @@ app.put("/clientes/:id", (req, res) => {
 
 //Destroy
 app.delete("/clientes/:id", (req, res) => {
+  
   const { id } = req.params;
-
-  const indice = clientes.findIndex((c) => c.id === +id);
+  
+  const indice = clientes.findIndex((c) => c.id == id);
 
   if (indice >= 0) {
     clientes.splice(indice, 1);
